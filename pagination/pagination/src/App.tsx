@@ -1,78 +1,80 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Product } from "./types";
 
 function App() {
+  const productsPerPage = 4;
+
   const [products, setProducts] = useState<Product[]>([]);
-  const [pages, setPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8;
-
-  async function getProducts() {
-    try {
-      const response = await fetch("https://dummyjson.com/products");
-      const data = await response.json();
-
-      return data.products;
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return [];
-    }
-  }
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const fetchedProducts = await getProducts();
-
-      setProducts(fetchedProducts);
-      setPages(Math.round(products.length / 5));
-    };
+    async function fetchProducts() {
+      try {
+        const response = await fetch("https://dummyjson.com/products");
+        const data = await response.json();
+        setProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      }
+    }
     fetchProducts();
   }, []);
 
+  const pageCount = Math.ceil(products.length / productsPerPage);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < pageCount) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
-    <>
+    <div className="app-container">
       <div className="container">
         {products
-          ?.slice(
-            currentPage * productsPerPage - productsPerPage,
+          .slice(
+            (currentPage - 1) * productsPerPage,
             currentPage * productsPerPage
           )
-          .map((product) => {
-            return (
-              <div key={`${product.id}`} className="product">
-                <p>{product["title"]}</p>
-                <img src={product.thumbnail} alt={product.description} />
-              </div>
-            );
-          })}
+          .map((product) => (
+            <div key={product.id} className="product">
+              <p>{product.title}</p>
+              <img src={product.thumbnail} alt={product.description} />
+            </div>
+          ))}
       </div>
       <div className="pagination">
-        <button onClick={() => setCurrentPage(currentPage - 1)}>
+        <button
+          className={currentPage === 1 ? "hidden" : ""}
+          onClick={handlePreviousPage}
+        >
           previous
         </button>
-        {[...Array(Math.ceil(products.length / productsPerPage))].map(
-          (_page, index) => {
-            return (
-              <button
-                onClick={() => setCurrentPage(index + 1)}
-                key={`${index}`}
-              >
-                {index + 1}
-              </button>
-            );
-          }
-        )}
+        {[...Array(pageCount)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={currentPage === index + 1 ? "currentPage" : ""}
+          >
+            {index + 1}
+          </button>
+        ))}
         <button
-          onClick={() => {
-            setCurrentPage(currentPage + 1);
-          }}
+          onClick={handleNextPage}
+          className={currentPage === pageCount ? "hidden" : ""}
         >
           next
         </button>
-
       </div>
-    </>
+    </div>
   );
 }
 

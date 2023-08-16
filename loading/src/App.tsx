@@ -6,17 +6,15 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCount(previousCount => {
+      setCount((previousCount) => {
         if (previousCount < 100) {
-          return previousCount + 10
+          return previousCount + 10;
         } else {
           clearInterval(interval);
-          return previousCount
+          return previousCount;
         }
       });
-
-     
-    },1000);
+    }, 1000);
 
     return () => {
       clearInterval(interval);
@@ -25,7 +23,14 @@ function App() {
   return (
     <>
       <div className="loading">
-        <div className="bar" style={{ width: `${count}%` }}></div>
+        <div
+          className="bar"
+          style={{ width: `${count}%` }}
+          role="progressbar"
+          aria-valuenow={count} 
+          aria-valuemin={0}
+          aria-valuemax={100}
+        ></div>
       </div>
     </>
   );
