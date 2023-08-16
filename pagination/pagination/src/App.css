@@ -1,0 +1,31 @@
+* {
+  max-width: 1280px;
+  margin: 0rem;
+  padding: 0rem;
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.container {
+  display: grid;
+  place-items: center;
+  align-items: center;
+  grid-template-columns: auto auto auto auto;
+}
+
+.product {
+  margin: 1rem;
+  text-align: center;
+}
+
+img {
+  width: 2.5rem;
+  height: 5.5rem;
+  object-fit: cover;
+}
