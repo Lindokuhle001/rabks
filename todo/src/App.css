@@ -4,6 +4,81 @@
   box-sizing: border-box;
 }
 
-.todoItem{
-  display: inline-block;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #474444;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgb(126, 103, 103);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.addTodoSection {
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  align-items: center;
+}
+
+label {
+  margin-right: 10px;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button#addTodo {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#todos {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.todoItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.todoTitle {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.deleteTodo {
+  padding: 4px 8px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

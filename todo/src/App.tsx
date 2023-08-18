@@ -1,48 +1,77 @@
-import { useState } from "react";
+import React, { useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
+import { dummyTodoList } from "./data";
+import { Todo } from "./types";
 
-type Todo = {
-  title: string;
-  completed: boolean;
-  id: string;
-};
+import TodoItem from "./components/TodoItem";
+
+
 
 function App() {
-  const [todo, setTodo] = useState<Todo>({
-    title: "",
-    completed: false,
-    id: "wewrwere",
-  });
-  const [todos, setTodos] = useState<Todo[]>([
-    {
-      title: "",
-      completed: false,
-      id: "wewrwere",
-    },
-  ]);
+  const [todos, setTodos] = useState<Todo[]>(dummyTodoList);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const inputValue = inputRef.current?.value;
+
+    if (inputValue) {
+      const newTodo: Todo = {
+        title: inputValue,
+        completed: false,
+        id: uuidv4(),
+      };
+
+      setTodos((currentTodos) => [...currentTodos, newTodo]);
+      inputRef.current!.value = "";
+    }
+  }
+
+  function handleDelete(todoId: string) {
+    setTodos((currentTodos) => {
+      return currentTodos.filter(({ id }) => id !== todoId);
+    });
+  }
+
+  function handleChecked(checkboxId: string) {
+    setTodos((currentTodos) => {
+      return currentTodos.map((todo) => {
+        if (todo.id === checkboxId) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        } else {
+          return todo;
+        }
+      });
+    });
+  }
+
 
   return (
     <div className="app">
-      <h1>todo list</h1>
+      <h1>Todo List</h1>
 
-      <section>
-        <label htmlFor="input">add todo</label>
-
-        <input id="todoInput" type="text" />
-
-        <button id="addTodo">add</button>
+      <section className="addTodoSection">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="todoInput">Add todo</label>
+          <input ref={inputRef} id="todoInput" type="text" />
+          <button id="addTodo" type="submit">
+            add
+          </button>
+        </form>
       </section>
 
       <section id="todos">
-        <h2>todos</h2>
+        <h2>Todos</h2>
 
         <ul>
           {todos.map((todoItem) => (
             <li className="todoItem" key={todoItem.id}>
-              <input type="checkbox" />
-              <div className="todoTitle">{todoItem.title}</div>
-
-              <button className="deleteTodo">delete</button>
+              <TodoItem todoItem={todoItem} handleChecked={handleChecked} handleDelete={handleDelete}/>
             </li>
           ))}
         </ul>
